@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by qhy (wondersgroup) -->
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by goodwin (goodwin) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:bpml="http://model.common.bpms.wondersgroup.com/" targetNamespace="http://model.common.bpms.wondersgroup.com/" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="Entity">
+		<xs:annotation>
+			<xs:documentation>实体定义</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="field" type="bpml:Field" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>实体项，用作实体的扩展属性定义</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:NCName" use="optional">
+			<xs:annotation>
+				<xs:documentation>名字</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="displayName" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>显示的名称，用户可读</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="description" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>描述信息</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="type" type="xs:int" use="optional">
+			<xs:annotation>
+				<xs:documentation>此实体的类型，处理程序将根据此信息进行不同的处理。对应“流程元数据”中的ID（如活动类型的ID），参见流程元数据的schema定义。</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="processModel" type="bpml:ProcessModel">
+		<xs:annotation>
+			<xs:documentation>流程模型根元素</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="Field">
+		<xs:annotation>
+			<xs:documentation>实体中的一个字段，作为扩展属性</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="name" type="xs:NCName" use="required">
+			<xs:annotation>
+				<xs:documentation>名字</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="value" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>字段值</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="type" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>字段的类型，参考xml schema的类型系统，目前不支持复杂类型和自定义的类型。</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="description" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>描述信息</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="Activity">
+		<xs:annotation>
+			<xs:documentation>活动定义</xs:documentation>
+			<xs:documentation>开始活动的扩展属性
+				<xs:startActivity>
+					<xs:attribute name="timeExpr" type="xs:string" use="optional">定时执行表达式：如果开始活动需要定时开始，需要设置这个时间表达式属性，具体的格式参见任务调度引擎的文档</xs:attribute>
+					<xs:attribute name="timeExprDescription" type="xs:string" use="optional">定时执行表达式的描述</xs:attribute>
+				</xs:startActivity>
+			</xs:documentation>
+			<xs:documentation>结束活动的扩展属性
+				<xs:endActivity/>
+			</xs:documentation>
+			<xs:documentation>XorSplit活动的扩展属性
+				<xs:XorSplit>
+					<xs:attribute name="condExprType" type="xs:string" use="optioanl">条件表达式的类型，如xpath、python等具体的类型参见脚本引擎的文档</xs:attribute>
+					<xs:attribute name="condExprPart" type="xs:string" use="required">条件表达式：代表分支条件的一部分，需要和连线上的条件结合起来判断，可以是一段脚本</xs:attribute>
+				</xs:XorSplit>
+			</xs:documentation>
+			<xs:documentation>OrSplit活动的扩展属性
+				<xs:OrSplit>
+					<xs:attribute name="condExprType" type="xs:string" use="optioanl">条件表达式的类型，如xpath、python等具体的类型参见脚本引擎的文档</xs:attribute>
+					<xs:attribute name="condExprPart" type="xs:string" use="required">条件表达式：代表分支条件的一部分，需要和连线上的条件结合起来判断，可以是一段脚本</xs:attribute>
+				</xs:OrSplit>
+			</xs:documentation>
+			<xs:documentation>AndSplit活动的扩展属性
+				<xs:AndSplit/>
+			</xs:documentation>
+			<xs:documentation>XorJoin活动的扩展属性
+				<xs:XorJoin/>
+			</xs:documentation>
+			<xs:documentation>AndJoin活动的扩展属性
+				<xs:AndJoin/>
+			</xs:documentation>
+			<xs:documentation>M选N合并活动的扩展属性
+				<xs:MNJoin>
+					<xs:attribute name="activatedNum" type="xs:int" use="required">已经激活的连线数：当有activatedNum条连线已经激活时，此活动可以结束</xs:attribute>
+				</xs:MNJoin>
+			</xs:documentation>
+			<xs:documentation>多实例活动的扩展属性
+				<xs:MultipleInstance>
+					<xs:attribute name="workNum" type="xs:int" use="required">活动产生的工作项分配数</xs:attribute>
+					<xs:attribute name="completedNum" type="xs:int" use="optional">当completedNum个工作项已经执行完成后，此活动实例可以结束</xs:attribute>
+				</xs:MultipleInstance>
+			</xs:documentation>
+			<xs:documentation>自动活动的扩展属性
+				<xs:autoActivity>
+					<xs:attribute name="timeout" type="xs:string" use="optional">自动活动的执行超时设定，以秒为单位，当开始执行后timeout秒还没有结束，则抛出超时异常</xs:attribute>
+					<xs:attribute name="exceptionHandler" type="xs:string" use="optional">自动活动的异常处理，包括应用抛出的异常、活动执行的超时异常等，处理方式可以是一段脚本，一个Java类，或者激活异常处理连线（如果存在）</xs:attribute>
+				</xs:autoActivity>
+			</xs:documentation>
+			<xs:documentation>人工活动的扩展属性
+				<xs:autoActivity>
+					<xs:attribute name="deadline" type="xs:string" use="optional">人工活动的执行限定时间，以天（工作日）为单位，当开始执行后deadline个工作日（以整天计算）还没有结束，则抛出超时异常</xs:attribute>
+					<xs:attribute name="exceptionHandler" type="xs:string" use="optional">人工活动的异常处理，如超时异常等，处理方式可以是一段脚本，一个Java类，或者激活异常处理连线（如果存在）</xs:attribute>
+				</xs:autoActivity>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bpml:Entity">
+				<xs:sequence>
+					<xs:element name="assignment" type="bpml:Assignment" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>活动分配给某个角色</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="appBinding" type="bpml:AppBinding" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>活动和某个应用进行绑定</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="inputContainer" type="bpml:InputContainer" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>输入容器的列表</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="outputContainer" type="bpml:OutputContainer" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>输出容器的列表</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="id" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>活动的ID，由流程建模工具生成唯一的ID</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="boundRectangle" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>活动的显示位置，描述了一个矩形框的四个顶点位置。</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="icon" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>活动的图标信息</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Container">
+		<xs:annotation>
+			<xs:documentation>数据容器定义</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bpml:Entity">
+				<xs:sequence>
+					<xs:element name="part" type="bpml:Part" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>一个数据项</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="id" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>数据容器的ID，由流程建模工具生成唯一的ID</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Transition">
+		<xs:annotation>
+			<xs:documentation>连线定义</xs:documentation>
+			<xs:documentation>无条件连线的扩展属性
+				<xs:NoCondTransition>
+				</xs:NoCondTransition>
+			</xs:documentation>
+			<xs:documentation>有条件连线的扩展属性
+				<xs:CondTransition>
+					<xs:attribute name="condExpr" type="xs:string" use="optional">条件连线上定义的条件，可以直接求值，返回boolean型的结果</xs:attribute>
+					<xs:attribute name="condExprPart" type="xs:string" use="optional">条件连线上定义的条件部分，和活动中的条件部分合并形成一个完整的条件</xs:attribute>
+					<xs:attribute name="condExprDescription" type="xs:string" use="optional">条件的描述信息</xs:attribute>
+				</xs:CondTransition>
+			</xs:documentation>
+			<xs:documentation>循环（驳回）连线的扩展属性
+				<xs:Loop>
+				</xs:Loop>
+			</xs:documentation>
+			<xs:documentation>异常处理连线的扩展属性
+				<xs:ExceptionHandler>
+					<xs:attribute name="excpetionID" type="xs:string" use="optional">异常ID</xs:attribute>
+					<xs:attribute name="excpetionName" type="xs:string" use="optional">异常名字</xs:attribute>
+					<xs:attribute name="excpetionMessage" type="xs:string" use="optional">异常携带的信息</xs:attribute>
+				</xs:ExceptionHandler>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bpml:Entity">
+				<xs:attribute name="points" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>连接点的数组，显示使用。</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="fromActivityId" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>连线的起始活动的ID</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="toActivityId" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>连线的到达活动的ID</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="id" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Application">
+		<xs:annotation>
+			<xs:documentation>应用定义</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bpml:Entity">
+				<xs:sequence>
+					<xs:element name="formalParameter" type="bpml:FormalParameter" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>应用的参数定义</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="id" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>应用的ID，从统一的应用表中取得</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Role">
+		<xs:annotation>
+			<xs:documentation>角色定义</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bpml:Entity">
+				<xs:attribute name="id" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Assignment">
+		<xs:annotation>
+			<xs:documentation>活动分配情况定义</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bpml:Entity">
+				<xs:attribute name="roleId" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>角色的ID，从本模型的角色定义中获取，或者从组织模型的角色表中获取</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AppBinding">
+		<xs:annotation>
+			<xs:documentation>活动和应用的绑定情况定义</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bpml:Entity">
+				<xs:sequence>
+					<xs:element name="paramsMapping" type="bpml:ParamsMapping" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="appId" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>应用的ID，可以在本流程模型中，也可以从应用表中获取</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="InputContainer">
+		<xs:annotation>
+			<xs:documentation>活动的输入数据容器定义</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bpml:Entity">
+				<xs:attribute name="containerId" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>数据容器的ID，从本流程模型的数据容器定义中获取</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="OutputContainer">
+		<xs:annotation>
+			<xs:documentation>活动的输出数据容器定义</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bpml:Entity">
+				<xs:attribute name="containerId" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>数据容器的ID，从本流程模型的数据容器定义中获取</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ParamsMapping">
+		<xs:annotation>
+			<xs:documentation>应用的参数映射定义</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bpml:Entity">
+				<xs:attribute name="paramName" type="xs:NCName" use="required">
+					<xs:annotation>
+						<xs:documentation>应用的某个参数的名字</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="actual" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>活动中和应用的形参绑定的实际参数变量名，此变量的位置由下面的actualType确定</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="actualType" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>实际参数变量的位置，activity代表变量是活动中的扩展属性，container代表变量是数据容器中的某个字段，expression代表变量是一个表达式</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Part">
+		<xs:annotation>
+			<xs:documentation>数据容器中一个数据字段的定义</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bpml:Entity">
+				<xs:attribute name="defaultValue" type="xs:string" use="optional">
+					<xs:annotation>
+						<xs:documentation>数据项的缺省值</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="class" type="xs:string" use="optional">
+					<xs:annotation>
+						<xs:documentation>数据项的数据类型，参考xml schema的类型系统</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FormalParameter">
+		<xs:annotation>
+			<xs:documentation>应用的形参定义</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bpml:Entity">
+				<xs:attribute name="class" type="xs:string" use="optional">
+					<xs:annotation>
+						<xs:documentation>参数的数据类型，参考xml schema的类型系统</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="mode" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>参数：输入、输出、输入输出</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ProcessModel">
+		<xs:annotation>
+			<xs:documentation>流程模型定义</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="bpml:Entity">
+				<xs:sequence>
+					<xs:element name="activity" type="bpml:Activity" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>活动的定义</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="container" type="bpml:Container" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>数据容器的定义</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="transition" type="bpml:Transition" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>连线定义</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="application" type="bpml:Application" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>应用的定义</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="role" type="bpml:Role" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>角色定义。其中name将会引用组织模型中的角色名字</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="id" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>流程模型的ID，由流程建模工具生成唯一的ID。</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="modifyDate" type="xs:string" use="optional">
+					<xs:annotation>
+						<xs:documentation>流程模型的修改时间</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="version" type="xs:string" use="optional">
+					<xs:annotation>
+						<xs:documentation>流程模型的版本号，由用户输入，格式由用户确定，如“v1.0”</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="state" type="xs:int" use="optional">
+					<xs:annotation>
+						<xs:documentation>流程模型的状态信息。0：未部署，1：已部署，2：已删除。</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>
