@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.wondersgroup.cuteflow.engine.entity.ProcessInstance;
 
+/**
+ * This is importance service.
+ * @author Jacky.Li
+ *
+ */
 public interface ProcessInstanceService {
 	
     /**
@@ -29,6 +34,11 @@ public interface ProcessInstanceService {
      */
     public ProcessInstance findProcessInstanceById(String id);
     
+    /**
+     * 获得所有的ProcessInstance对象。
+     * @return
+     */
+    public List<ProcessInstance> findAllProcessInstance(); 
 
     /**
      * 查找并返回同一个业务流程的所有实例
@@ -57,4 +67,6 @@ public interface ProcessInstanceService {
      * @param processInstance
      */
     public void restoreProcessInstance(ProcessInstance processInstance);
+    
+    
 }
