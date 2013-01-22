@@ -20,7 +20,7 @@ public interface CalenderService {
 	 * @param 
 	 * @return
 	 */
-	public boolean isBusinessDay(Date d);
+	public boolean isBusinessDay(Date d);	
 
 	/**
 	 * 获得系统时间
